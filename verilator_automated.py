@@ -1,4 +1,7 @@
-
+# =============================================== #
+# This python script simulates sysmemverilog testbenches with its modules
+# use it as "python3 verilator_automated.py location/systemverilog.sv location/tb_vga_controller.sv"
+# =============================================== #
 import subprocess
 import sys
 import time

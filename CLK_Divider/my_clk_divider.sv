@@ -1,7 +1,7 @@
 /*
 Clock divider, it divides the clock by div
 
-AS OF 2025-09-20 22:40
+AS OF 20250920 22:40
     THIS MODULE WORKS FINE!
 
 */
