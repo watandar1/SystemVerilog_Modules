@@ -31,13 +31,18 @@ def run_verilator(module, tb): #module is module to be tested and tb is the test
     print(f"Waiting for {exe_path}...")
      
     for i in range(20):
+        # if path exist break 
         if exe_path.exists():
             print(f"{exe_path} exists")
             break
-            time.sleep(0.5)
+
         else:
+            # the path does not exist wait and try again 
             print(f"{exe_path} does not exist")
-            sys.exit(1)
+            time.sleep(0.5)
+    else:
+        print(f"Did not find path {exe_path}")
+        sys.exit(1)
  
     #lets run the simulator
     print("Running simulation...")
