@@ -29,7 +29,7 @@ module my_VGA_active_pulse_Gen #(
 ) (
     //What inputs do we want? :/
     input logic i_clk,
-    // no reset function! this module will be used inside another 
+    input logic i_rst_n,
 
     //Outputs
     output logic o_hsync_active,                                           // 1 bit signal either high or low depending if we are in visible are or not!
@@ -37,27 +37,40 @@ module my_VGA_active_pulse_Gen #(
 
     //the counters are set as output 
     //so they can be used in other modules aswell
-    output logic [$clog2(HSYNC_WIDTH)-1:0] o_hsync_active_counter,           //dynamic counter will be able to count to HSYNC_WIDTH         
-    output logic [$clog2(VSYNC_WIDTH)-1:0] o_vsync_active_counter           //dynamic counter will be able to count to VSYNC_WIDTH
+    output logic [$clog2(HSYNC_WIDTH)-1:0] o_hsync_frame_pos,           //dynamic counter will be able to count to HSYNC_WIDTH         
+    output logic [$clog2(VSYNC_WIDTH)-1:0] o_vsync_frame_pos           //dynamic counter will be able to count to VSYNC_WIDTH
 );
 
+     my_VGA_frame_Gen #(
+        .HSYNC_TOT(HSYNC_WIDTH),
+        .VSYNC_TOT(VSYNC_WIDTH)
+     ) frame_gen_for_sync (
+        .i_CLK(i_clk),
+        .i_rst_n(i_rst_n), // asynchronous reset for the counters
+        .o_hsync_frame_pos(o_hsync_frame_pos),
+        .o_vsync_frame_pos(o_vsync_frame_pos),
+        .o_w_frame_reset()
+    );
 
-always_ff @(posedge i_clk) begin
-    if (o_hsync_active_counter == (HSYNC_WIDTH - 1)) begin
-        o_hsync_active_counter <= 0;
-        if (o_vsync_active_counter == (VSYNC_WIDTH - 1)) begin
-            o_vsync_active_counter <= 0;
-        end else begin
-            o_vsync_active_counter <= o_vsync_active_counter + 1;
-        end
-        end else begin
-            o_hsync_active_counter <= o_hsync_active_counter + 1;
-        end
+always_ff @(posedge i_clk or negedge i_rst_n) begin
+    // asynchrounous reset so that hsync and vsync can start with known values
+    if (o_hsync_frame_pos == HSYNC_WIDTH-1) begin
+        if (o_vsync_frame_pos == VSYNC_WIDTH-1) begin
+            o_vsync_frame_pos <= 0;
+            end else begin
+            o_vsync_frame_pos <= o_vsync_frame_pos + 1;
+            end
+        o_hsync_frame_pos <= 0;
+    end else begin
+        o_hsync_frame_pos <= o_hsync_frame_pos + 1;
+    end
+    
+ 
 end
 
 //visible area is 640 for Hsync and 480 for vsync
 //we use the ternary operator ? -> (condition) ? (true expression) : (false expression)
-assign o_hsync_active = (o_hsync_active_counter < HSYNC_ACTIVE) ? 1'b1 : 1'b0;
-assign o_vsync_active = (o_vsync_active_counter < VSYNC_ACTIVE) ? 1'b1 : 1'b0;
+assign o_hsync_active = (o_hsync_frame_pos < HSYNC_ACTIVE) ? 1'b1 : 1'b0;
+assign o_vsync_active = (o_vsync_frame_pos < VSYNC_ACTIVE) ? 1'b1 : 1'b0;
     
 endmodule

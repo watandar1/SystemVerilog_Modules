@@ -6,6 +6,7 @@ VGA sync pulse generator test bench
 module tb_my_VGA_active_pulse_Gen;
 
     logic tb_clk;
+    logic tb_rst_n;
 
     logic tb_vsync;      
     logic tb_hsync;
@@ -27,10 +28,11 @@ module tb_my_VGA_active_pulse_Gen;
 
     ) vga_active_pulse_tb (
         .i_clk(tb_clk),
+        .i_rst_n(tb_rst_n),
         .o_hsync_active(tb_hsync),
         .o_vsync_active(tb_vsync),
-        .o_hsync_active_counter(tb_hsync_pulse_counter),
-        .o_vsync_active_counter(tb_vsync_pulse_counter)
+        .o_hsync_frame_pos(tb_hsync_pulse_counter),
+        .o_vsync_frame_pos(tb_vsync_pulse_counter)
     );                                      
 
     always begin
@@ -41,6 +43,10 @@ module tb_my_VGA_active_pulse_Gen;
 
     initial begin
         tb_clk = 0;
+        #40;
+        tb_rst_n = 1'b1;
+        #40;
+        tb_rst_n = 0'b1;
 
         // Run long enough to see multiple frames
         #(HSYNC_WIDTH*VSYNC_WIDTH*2*40); // 2 frames worth of clock cycles
