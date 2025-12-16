@@ -12,13 +12,13 @@ module tb_my_VGA_active_pulse_Gen;
     logic tb_hsync;
 
     
-    logic [$clog2(800)-1:0] tb_hsync_pulse_counter;           //dynamic counter will be able to count to HSYNC_WIDTH         
-    logic [$clog2(525)-1:0] tb_vsync_pulse_counter;  
-        
-    localparam HSYNC_WIDTH = 800;
-    localparam VSYNC_WIDTH = 525;
-    localparam HSYNC_ACTIVE = 640;
-    localparam VSYNC_ACTIVE = 480;  
+    logic [$clog2(HSYNC_WIDTH)-1:0] tb_hsync_pulse_counter;           //dynamic counter will be able to count to HSYNC_WIDTH         
+    logic [$clog2(VSYNC_WIDTH)-1:0] tb_vsync_pulse_counter;  
+    //changed the parameters so the signals can be observed better
+    localparam HSYNC_WIDTH = 56;
+    localparam VSYNC_WIDTH = 35;
+    localparam HSYNC_ACTIVE = 40;
+    localparam VSYNC_ACTIVE = 30;  
 
     my_VGA_active_pulse_Gen #(
         .HSYNC_WIDTH(HSYNC_WIDTH),

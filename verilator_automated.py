@@ -41,7 +41,7 @@ def run_verilator(module, tb): #module is module to be tested and tb is the test
             print(f"{exe_path} does not exist")
             time.sleep(0.5)
     else:
-        print(f"Did not find path {exe_path}")
+        print(f"Did not find path {exe_path}, exiting")
         sys.exit(1)
  
     #lets run the simulator
@@ -63,6 +63,6 @@ if __name__ == "__main__":
         print(f"Usage: {sys.argv[0]} <module.sv> <tb.sv>")
         sys.exit(1)
 
-    module_file = sys.argv[1]
-    tb_file = sys.argv[2]
+    module_file = sys.argv[1] # your code to test 
+    tb_file = sys.argv[2] # the testbench to test your code on
     run_verilator(module_file, tb_file)
