@@ -1,28 +1,23 @@
 /*
-
+testbench for my_VGA_driver.sv
+works fine with small timing parameters for faster simulation
+has not been tested with real VGA timing parameters yet
+2025-12-16
 */
 
-`timescale 1ns/
-module tb_my_VGA_sync_pulse_gen;
-
+`timescale 1ns/1ps
+module tb_my_VGA_driver;
     logic tb_clk;
     logic tb_rst_n;
 
     logic tb_vsync_pulse;      
     logic tb_hsync_pulse;
-    logic tb_vsync_active;      
-    logic tb_hsync_active;
-    logic tb_hsync_active_reg;
-    logic tb_vsync_active_reg;
-
     
     logic [$clog2(HSYNC_WIDTH)-1:0] tb_hsync_pulse_counter;           //dynamic counter will be able to count to HSYNC_WIDTH         
     logic [$clog2(VSYNC_WIDTH)-1:0] tb_vsync_pulse_counter;
     
-    localparam CLKS_PER_BITS = 217;
-    localparam VIDEO_WIDTH = 4; 
-    // vga 640X480 @60 hz Timing spec 
-    // Hsync pulse 96, Vsync pulse 2
+    localparam VIDEO_WIDTH = 4;
+    // vga 640X480 @60 hz Timing spec
     /*
     localparam HSYNC_WIDTH = 800;
     localparam VSYNC_WIDTH = 525;
@@ -35,9 +30,7 @@ module tb_my_VGA_sync_pulse_gen;
     localparam HSYNC_PULSE = 96;
     localparam VSYNC_PULSE = 2;
     */
-
-
-    // Hsync pulse 8 bits and Vsync pulse 2 bits
+    // VGA small timing for faster simulation
     localparam HSYNC_WIDTH = 56;
     localparam VSYNC_WIDTH = 35;
     localparam HSYNC_ACTIVE = 40;
@@ -48,24 +41,11 @@ module tb_my_VGA_sync_pulse_gen;
     localparam VSYNC_BACK = 2;
     localparam HSYNC_PULSE = 8;
     localparam VSYNC_PULSE = 2;
-    
 
-      my_VGA_active_pulse_Gen #(
-        .HSYNC_WIDTH(HSYNC_WIDTH),
-        .VSYNC_WIDTH(VSYNC_WIDTH),
-        .HSYNC_ACTIVE(HSYNC_ACTIVE),
-        .VSYNC_ACTIVE(VSYNC_ACTIVE)
 
-    ) vga_active_pulse_tb (
-        .i_clk(tb_clk),
-        .i_rst_n(tb_rst_n),
-        .o_hsync_active(tb_hsync_active_reg),
-        .o_vsync_active(tb_vsync_active_reg),
-        .o_hsync_frame_pos(tb_hsync_pulse_counter),
-        .o_vsync_frame_pos(tb_vsync_pulse_counter)
-    );        
-
-    my_VGA_sync_pulse_gen #(
+    //Instantiate the DUT
+    my_VGA_driver #(
+        .VIDEO_WIDTH(VIDEO_WIDTH),
         .HSYNC_WIDTH(HSYNC_WIDTH),
         .VSYNC_WIDTH(VSYNC_WIDTH),
         .HSYNC_ACTIVE(HSYNC_ACTIVE),
@@ -76,17 +56,17 @@ module tb_my_VGA_sync_pulse_gen;
         .VSYNC_BACK(VSYNC_BACK),
         .HSYNC_PULSE(HSYNC_PULSE),
         .VSYNC_PULSE(VSYNC_PULSE)
-
-
-    ) my_VGA_sync_pulse_gen (
+    ) DUT (
         .i_clk(tb_clk),
         .i_rst_n(tb_rst_n),
-        .i_active_hsync(tb_hsync_active_reg),
-        .i_active_vsync(tb_vsync_active_reg),
         .o_hsync_pulse(tb_hsync_pulse),
-        .o_vsync_pulse(tb_vsync_pulse)
-    );                                      
+        .o_vsync_pulse(tb_vsync_pulse),
+        .o_hsync_frame_pos(tb_hsync_pulse_counter),
+        .o_vsync_frame_pos(tb_vsync_pulse_counter),
+        .o_w_frame_reset()
+    );
 
+    
     always begin
         #20; // 25 MHz clock
         tb_clk <= ~tb_clk;
@@ -95,9 +75,9 @@ module tb_my_VGA_sync_pulse_gen;
     initial begin
         tb_clk = 0;
         #40;
-        tb_rst_n = 1'b1;
+        tb_rst_n = 1'b0;
         #40;
-        tb_rst_n = 0'b1;
+        tb_rst_n = 1'b1;
 
         // Run long enough to see multiple frames
         #(HSYNC_WIDTH*VSYNC_WIDTH*2*40); // 2 frames worth of clock cycles

@@ -15,7 +15,7 @@ module my_VGA_frame_Gen #(
     // OUTPUTS:
     output logic [$clog2(HSYNC_TOT)-1:0] o_hsync_frame_pos,             //hsync pixel position
     output logic [$clog2(VSYNC_TOT)-1:0] o_vsync_frame_pos,             //vsync pixel position
-    
+
     output wire o_w_frame_reset // shows when new frame starts
 );
 //wire frame_reset: Synchronous always sequential block

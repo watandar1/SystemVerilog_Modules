@@ -32,13 +32,13 @@ module my_VGA_active_pulse_Gen #(
     input logic i_rst_n,
 
     //Outputs
-    output logic o_hsync_active,                                           // 1 bit signal either high or low depending if we are in visible are or not!
-    output logic o_vsync_active,                                            // 1 bit signal either high or low depending if we are in visible are or not!
+    output wire o_hsync_active,                                           // 1 bit signal either high or low depending if we are in visible are or not!
+    output wire o_vsync_active,                                            // 1 bit signal either high or low depending if we are in visible are or not!
 
     //the counters are set as output 
     //so they can be used in other modules aswell
-    output logic [$clog2(HSYNC_WIDTH)-1:0] o_hsync_frame_pos,           //dynamic counter will be able to count to HSYNC_WIDTH         
-    output logic [$clog2(VSYNC_WIDTH)-1:0] o_vsync_frame_pos           //dynamic counter will be able to count to VSYNC_WIDTH
+    output wire [$clog2(HSYNC_WIDTH)-1:0] o_hsync_frame_pos,           //dynamic counter will be able to count to HSYNC_WIDTH         
+    output wire [$clog2(VSYNC_WIDTH)-1:0] o_vsync_frame_pos           //dynamic counter will be able to count to VSYNC_WIDTH
 );
 
      my_VGA_frame_Gen #(
@@ -52,21 +52,6 @@ module my_VGA_active_pulse_Gen #(
         .o_w_frame_reset()
     );
 
-always_ff @(posedge i_clk or negedge i_rst_n) begin
-    // asynchrounous reset so that hsync and vsync can start with known values
-    if (o_hsync_frame_pos == HSYNC_WIDTH-1) begin
-        if (o_vsync_frame_pos == VSYNC_WIDTH-1) begin
-            o_vsync_frame_pos <= 0;
-            end else begin
-            o_vsync_frame_pos <= o_vsync_frame_pos + 1;
-            end
-        o_hsync_frame_pos <= 0;
-    end else begin
-        o_hsync_frame_pos <= o_hsync_frame_pos + 1;
-    end
-    
- 
-end
 
 //visible area is 640 for Hsync and 480 for vsync
 //we use the ternary operator ? -> (condition) ? (true expression) : (false expression)
