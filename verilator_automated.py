@@ -11,12 +11,16 @@ from pathlib import Path
 def run_verilator(module, tb): #module is module to be tested and tb is the testbench
     top = Path(tb).stem
 
+    # gather all include directories in the current directory except obj_dir
+    include_dirs = [f"-I{p}" for p in Path.cwd().glob('*') if p.is_dir() and p.name != 'obj_dir']
+
     cmd = [
         "verilator",
         "--binary",
         #"--Wall", add this if you want all warnings and everything, this might be annoying
         "--trace",
         "--timing",
+        *include_dirs,
         module,
         tb,
         f"--top {top}"

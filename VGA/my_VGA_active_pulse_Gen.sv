@@ -52,7 +52,6 @@ module my_VGA_active_pulse_Gen #(
         .o_w_frame_reset()
     );
 
-
 //visible area is 640 for Hsync and 480 for vsync
 //we use the ternary operator ? -> (condition) ? (true expression) : (false expression)
 assign o_hsync_active = (o_hsync_frame_pos < HSYNC_ACTIVE) ? 1'b1 : 1'b0;
