@@ -61,6 +61,10 @@ module my_VGA_sync_pulse_gen #(
     );
 
 //Generate real sync pulses with front and back porch
+// I used an always_ff block first but it got a race condition since the counters are updated on posedge clk
+// and the always_ff block also triggers on posedge clk
+// so the counters would update after the always_ff block and cause wrong pulse generation
+// so I changed it to continuous assignment which works fine here
 assign o_hsync_pulse = ((hsync_counter >= (HSYNC_ACTIVE + HSYNC_FRONT)) && 
                         (hsync_counter <  (HSYNC_ACTIVE + HSYNC_FRONT + HSYNC_PULSE))) ? 1'b0 : 1'b1;
 
