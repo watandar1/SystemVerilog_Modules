@@ -11,18 +11,20 @@ module pixel_grid_gen #(
     parameter PIXEL_GRID_H = 16,
     parameter PIXEL_GRID_V = 16,
     parameter HSYNC_ACTIVE = 640,
-    parameter VSYNC_ACTIVE = 480,
-    parameter GRID_COLS = HSYNC_ACTIVE / PIXEL_GRID_H,  // 40 columns
-    parameter GRID_ROWS = VSYNC_ACTIVE / PIXEL_GRID_V   // 30 rows
+    parameter VSYNC_ACTIVE = 480
 ) (
     //Inputs:
-    input wire [$clog2(HSYNC_ACTIVE)-1:0] i_hsync_pos,           //dynamic counter will be able to count to HSYNC_WIDTH         
-    input wire [$clog2(VSYNC_ACTIVE)-1:0] i_vsync_pos,           //dynamic counter will be able to count to VSYNC_WIDTH
+    input logic [$clog2(HSYNC_ACTIVE)-1:0] i_hsync_pos,           //dynamic counter will be able to count to HSYNC_WIDTH         
+    input logic [$clog2(VSYNC_ACTIVE)-1:0] i_vsync_pos,           //dynamic counter will be able to count to VSYNC_WIDTH
 
     //outputs:
     output logic [$clog2(GRID_COLS)-1:0] o_grid_col, // indicates if in active hsync area
     output logic [$clog2(GRID_ROWS)-1:0] o_grid_row  // indicates if in active vsync area
 );
+
+    
+localparam GRID_COLS = HSYNC_ACTIVE / PIXEL_GRID_H;  // 40 columns
+localparam GRID_ROWS = VSYNC_ACTIVE / PIXEL_GRID_V;   // 30 rows
 
 localparam pixel_h = $clog2(PIXEL_GRID_H);
 localparam pixel_v = $clog2(PIXEL_GRID_V);

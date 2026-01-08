@@ -16,7 +16,7 @@ module my_VGA_frame_Gen #(
     output logic [$clog2(HSYNC_TOT)-1:0] o_hsync_frame_pos,             //hsync pixel position
     output logic [$clog2(VSYNC_TOT)-1:0] o_vsync_frame_pos,             //vsync pixel position
 
-    output wire o_w_frame_reset // shows when new frame starts
+    output logic o_w_frame_reset // shows when new frame starts
 );
 //wire frame_reset: Synchronous always sequential block
 always_ff @(posedge i_CLK or negedge i_rst_n) begin
@@ -40,6 +40,6 @@ always_ff @(posedge i_CLK or negedge i_rst_n) begin
 end
 
 //assign frame start so other modules can use this to know when a new frame starts
-assign o_w_frame_reset = ((o_vsync_frame_pos == VSYNC_TOT-1) && (o_hsync_frame_pos == HSYNC_TOT-1)) ? 1'b1 : 1'b0;
+assign o_w_frame_reset = ((o_vsync_frame_pos == VSYNC_TOT-1) && (o_hsync_frame_pos == HSYNC_TOT-1));
     
 endmodule

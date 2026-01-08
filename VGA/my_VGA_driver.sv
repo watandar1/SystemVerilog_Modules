@@ -26,7 +26,7 @@ module my_VGA_driver #(
     output wire o_vsync_pulse,                                              // generates real sync pulse with front and back porch
     output logic [$clog2(HSYNC_WIDTH)-1:0] o_hsync_frame_pos,               //hsync pixel position
     output logic [$clog2(VSYNC_WIDTH)-1:0] o_vsync_frame_pos,               //vsync pixel position
-    output wire o_w_frame_reset // shows when new frame starts
+    output logic o_w_frame_reset // shows when new frame starts
     
 );
 

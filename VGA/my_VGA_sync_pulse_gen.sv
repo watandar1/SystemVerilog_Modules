@@ -37,17 +37,17 @@ module my_VGA_sync_pulse_gen #(
     //What inputs do we want? :/
     input logic i_clk,
     input logic i_rst_n,
-    input wire i_active_hsync,
-    input wire i_active_vsync,
+    input logic i_active_hsync,
+    input logic i_active_vsync,
     //Outputs
-    output wire o_hsync_pulse,         // generates real sync pulse with front and back porch
-    output wire o_vsync_pulse          // generates real sync pulse with front and back porch
+    output logic o_hsync_pulse,         // generates real sync pulse with front and back porch
+    output logic o_vsync_pulse          // generates real sync pulse with front and back porch
  
 );
 
     //choose wire instead of logic since we dont want to store it here, we are just passing it along
-    wire [$clog2(HSYNC_WIDTH)-1:0] hsync_counter;              //dynamic counter will be able to count to HSYNC_WIDTH         
-    wire [$clog2(VSYNC_WIDTH)-1:0] vsync_counter;              //dynamic counter will be able to count to VSYNC_WIDTH
+    logic [$clog2(HSYNC_WIDTH)-1:0] hsync_counter;              //dynamic counter will be able to count to HSYNC_WIDTH         
+    logic [$clog2(VSYNC_WIDTH)-1:0] vsync_counter;              //dynamic counter will be able to count to VSYNC_WIDTH
 
      my_VGA_frame_Gen #(
         .HSYNC_TOT(HSYNC_WIDTH),

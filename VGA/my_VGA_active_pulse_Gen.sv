@@ -32,13 +32,15 @@ module my_VGA_active_pulse_Gen #(
     input logic i_rst_n,
 
     //Outputs
-    output wire o_hsync_active,                                           // 1 bit signal either high or low depending if we are in visible are or not!
-    output wire o_vsync_active,                                            // 1 bit signal either high or low depending if we are in visible are or not!
+    output logic o_hsync_active,                                           // 1 bit signal either high or low depending if we are in visible are or not!
+    output logic o_vsync_active,                                            // 1 bit signal either high or low depending if we are in visible are or not!
+
+    output logic o_w_frame_reset,
 
     //the counters are set as output 
     //so they can be used in other modules aswell
-    output wire [$clog2(HSYNC_WIDTH)-1:0] o_hsync_frame_pos,           //dynamic counter will be able to count to HSYNC_WIDTH         
-    output wire [$clog2(VSYNC_WIDTH)-1:0] o_vsync_frame_pos           //dynamic counter will be able to count to VSYNC_WIDTH
+    output logic [$clog2(HSYNC_WIDTH)-1:0] o_hsync_frame_pos,           //dynamic counter will be able to count to HSYNC_WIDTH         
+    output logic [$clog2(VSYNC_WIDTH)-1:0] o_vsync_frame_pos           //dynamic counter will be able to count to VSYNC_WIDTH
 );
 
      my_VGA_frame_Gen #(
@@ -49,7 +51,7 @@ module my_VGA_active_pulse_Gen #(
         .i_rst_n(i_rst_n), // asynchronous reset for the counters
         .o_hsync_frame_pos(o_hsync_frame_pos),
         .o_vsync_frame_pos(o_vsync_frame_pos),
-        .o_w_frame_reset()
+        .o_w_frame_reset(o_w_frame_reset)
     );
 
 //visible area is 640 for Hsync and 480 for vsync

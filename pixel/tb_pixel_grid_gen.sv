@@ -10,8 +10,8 @@ generate "active frame signals with frame_gen.sv"
     localparam HSYNC_ACTIVE = 640;
     localparam VSYNC_ACTIVE = 480;
     
-    localparam PIXEL_GRID_H = 8;
-    localparam PIXEL_GRID_V = 8;
+    localparam PIXEL_GRID_H = 16;
+    localparam PIXEL_GRID_V = 16;
 
     
     localparam GRID_COLS = HSYNC_ACTIVE / PIXEL_GRID_H;  // 40 columns
