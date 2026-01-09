@@ -15,7 +15,7 @@ module ball #(
 
 ) (
     // INPUTS:
-    input logic [3:0] background,
+    //input logic [3:0] background,
 
     input logic i_clk,
     input logic i_rst_n,
@@ -25,23 +25,23 @@ module ball #(
 
     // OUTPUTS:
     output logic o_ball_on,
-    output logic [3:0] ball_color
+    output logic [3:0] o_ball_color
     
 );
 
-    logic [$clog2(HSYNC_WIDTH)-1:0] ball_y = HSYNC_ACTIVE / 2;
-    logic [$clog2(VSYNC_WIDTH)-1:0] ball_x = VSYNC_ACTIVE / 2;
+    localparam center_x = HSYNC_ACTIVE / 2;
+    localparam center_y = VSYNC_ACTIVE / 2;
     
-    logic [$clog2(VSYNC_WIDTH)-1:0] dx;
-    logic [$clog2(HSYNC_WIDTH)-1:0] dy;
+    logic signed [11:0] dy;
+    logic signed [11:0] dx;
 
     // Code for the ball to be in the middle of the screen: 
-    assign dx = o_vsync_frame_pos - ball_x;
-    assign dy = o_hsync_frame_pos - ball_y;
+    assign dx = $signed(o_vsync_frame_pos) - $signed(center_y);
+    assign dy = $signed(o_hsync_frame_pos) - $signed(center_x);
     // Pythagorean theorem to determine if pixel is within the ball radius
     // Using ternary operator to set o_ball_on
-    assign o_ball_on = (((dx * dx) + (dy * dy)) =< (BALL_RADIUS * BALL_RADIUS)) ? 1'b1 : 1'b0;
-    assign ball_color = 4'h0; // black ball
+    assign o_ball_on = (((dx * dx) + (dy * dy)) < (BALL_RADIUS * BALL_RADIUS)) ? 1'b1 : 1'b0;
+    assign o_ball_color = 4'h0; // black ball
 
 
 endmodule
