@@ -19,6 +19,7 @@ module ball #(
 
     input logic i_clk,
     input logic i_rst_n,
+    input logic i_frame_start,
 
     input logic [$clog2(HSYNC_WIDTH)-1:0] o_hsync_frame_pos,           //dynamic counter will be able to count to HSYNC_WIDTH         
     input logic [$clog2(VSYNC_WIDTH)-1:0] o_vsync_frame_pos,           //dynamic counter will be able to count to VSYNC_WIDTH
@@ -29,15 +30,33 @@ module ball #(
     
 );
 
-    localparam center_x = HSYNC_ACTIVE / 2;
-    localparam center_y = VSYNC_ACTIVE / 2;
+    localparam ball_center_x = HSYNC_ACTIVE / 2;
+    localparam ball_center_y = VSYNC_ACTIVE / 2;
     
     logic signed [11:0] dy;
     logic signed [11:0] dx;
 
-    // Code for the ball to be in the middle of the screen: 
-    assign dx = $signed(o_vsync_frame_pos) - $signed(center_y);
-    assign dy = $signed(o_hsync_frame_pos) - $signed(center_x);
+    // Code for moving the ball
+    // We need to change the center of the ball so it can move
+    
+    always_comb begin
+        // if frame start move the ball
+        // if not keep ball at current center point
+        if (i_frame_start) begin
+            
+        end else begin
+            
+        end
+    end
+
+    // CODE for fixed ball 
+    /*
+
+    assign dx = $signed(o_vsync_frame_pos) - $signed(ball_center_y);
+    assign dy = $signed(o_hsync_frame_pos) - $signed(ball_center_x);
+
+    */
+
     // Pythagorean theorem to determine if pixel is within the ball radius
     // Using ternary operator to set o_ball_on
     assign o_ball_on = (((dx * dx) + (dy * dy)) < (BALL_RADIUS * BALL_RADIUS)) ? 1'b1 : 1'b0;
