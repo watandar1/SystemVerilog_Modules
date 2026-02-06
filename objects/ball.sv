@@ -38,7 +38,7 @@ module ball #(
 
     // Code for moving the ball
     // We need to change the center of the ball so it can move
-    
+    /*
     always_comb begin
         // if frame start move the ball
         // if not keep ball at current center point
@@ -48,6 +48,7 @@ module ball #(
             
         end
     end
+    */
 
     // CODE for fixed ball 
     /*
