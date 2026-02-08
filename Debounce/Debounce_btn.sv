@@ -8,9 +8,9 @@ module debounce_btn #(
     parameter c_DEBOUNCE_LIMIT = 500000
 )(
     input logic i_clk,
-    input logic i_rst, 
+    input logic i_rst_n, 
     input logic i_btn,
-    output logic o_led
+    output logic o_debounced
 );
 
   
@@ -28,7 +28,7 @@ module debounce_btn #(
 
 always_ff @(posedge i_clk) begin
 
-    if (i_rst) begin
+    if (!i_rst_n) begin
         state_debounce <= 1'b0;
         counter_debounce <= 0;
     end else begin
@@ -45,7 +45,7 @@ always_ff @(posedge i_clk) begin
     end
 end
 
-assign o_led = state_debounce;
+assign o_debounced = state_debounce;
 
 endmodule
 

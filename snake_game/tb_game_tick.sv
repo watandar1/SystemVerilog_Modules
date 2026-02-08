@@ -1,9 +1,9 @@
 /*
-VGA sync pulse generator test bench
+testing game tick 
 */
 `timescale 1ns/1ps
 
-module tb_my_VGA_active_pulse_Gen;
+module tb_game_tick;
 
     logic tb_clk;
     logic tb_rst_n;
@@ -12,6 +12,7 @@ module tb_my_VGA_active_pulse_Gen;
     logic tb_hsync;
 
     logic tb_frame_reset;
+    logic tb_game_tick;
 
     
     logic [$clog2(HSYNC_WIDTH)-1:0] tb_hsync_pulse_counter;           //dynamic counter will be able to count to HSYNC_WIDTH         
@@ -45,7 +46,16 @@ module tb_my_VGA_active_pulse_Gen;
         .o_w_frame_reset(tb_frame_reset),
         .o_hsync_frame_pos(tb_hsync_pulse_counter),
         .o_vsync_frame_pos(tb_vsync_pulse_counter)
-    );                                      
+    );      
+    
+    game_tick #(
+        .FRAMES_PER_TICK(5)
+    ) game_tick_dut (
+        .i_clk(tb_clk),
+        .i_rst_n(tb_rst_n),
+        .frame_start(tb_frame_reset),
+        .o_game_tick(tb_game_tick)
+    );
 
     always begin
         #20; // 25 MHz clock
@@ -61,14 +71,14 @@ module tb_my_VGA_active_pulse_Gen;
         tb_rst_n = 0'b1;
 
         // Run long enough to see multiple frames
-        #(HSYNC_WIDTH*VSYNC_WIDTH*2*40); // 2 frames worth of clock cycles
+        #(HSYNC_WIDTH*VSYNC_WIDTH*14*40); // 14 frames worth of clock cycles
         $finish;
     end
 
 
     initial begin
         $dumpfile("Waveform.vcd");
-        $dumpvars(0, tb_My_VGA_Sync_Pulse_Gen);
+        $dumpvars(0, tb_game_tick);
     end
 
 endmodule

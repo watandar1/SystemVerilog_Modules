@@ -28,9 +28,11 @@ module snake #(
 
 //internal signals:
 
- logic [10:0] snake_head_x; // x position of the snake's head
- logic [10:0] snake_head_y; // y position of the snake's head
+ logic [10:0] snake_body_x; // x position of the snake's head
+ logic [10:0] snake_body_y; // y position of the snake's head
 
+ logic snake_head_x = 1;
+ logic snake_head_y = 1;
 
 //FSM states definitionm use typedef enum logic
 typedef enum logic [1:0] {
