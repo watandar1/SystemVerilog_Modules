@@ -12,10 +12,15 @@ module collision_detection #(
     //Inputs:
 
     // clock input
+    input logic i_clk,
 
     // reset input
+    input logic i_rst_n,
 
     // snake position input
+
+    input logic [10:0] snake_head_x, // x position of the snake
+    input logic [10:0] snake_head_y, // y position of the snake
 
     // food position input
 

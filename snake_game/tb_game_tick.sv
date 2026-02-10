@@ -71,7 +71,7 @@ module tb_game_tick;
         tb_rst_n = 0'b1;
 
         // Run long enough to see multiple frames
-        #(HSYNC_WIDTH*VSYNC_WIDTH*14*40); // 14 frames worth of clock cycles
+        #(HSYNC_WIDTH*VSYNC_WIDTH*25*40); // 25 frames worth of clock cycles
         $finish;
     end
 

@@ -12,9 +12,9 @@ enough for our purposes, and it does not repeat until 65535 cycles which is good
 */
 `timescale 1ns/1ps // timescale for simulation
 
-module my_LSFR #(
+module my_LFSR #(
     // Global parameter
-    parameter WIDTH = 16 // width of the LSFR
+    parameter WIDTH = 16 // width of the LFSR
 
 ) (
     // Inputs:

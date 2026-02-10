@@ -8,7 +8,7 @@ tested with tb_game_tick.sv and it works 2026-02-07
 
 module game_tick #(
     // Global parameters: 
-    parameter FRAMES_PER_TICK = 5 // for snake this means how many cells it will move every second
+    parameter FRAMES_PER_TICK = 5 // number of frames per game tick, adjust as needed for desired game speed
 
 ) (
     // Inputs:

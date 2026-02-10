@@ -28,7 +28,7 @@ module tb_my_LFSR;
     
     
     always begin
-        #5;
+        #20;
         tb_clk <= ~tb_clk; // 25 MHz clock
     end
 
