@@ -32,7 +32,7 @@ module tb_food;
     logic [$clog2(HSYNC_WIDTH)-1:0] tb_hsync_pulse_counter;           //dynamic counter will be able to count to HSYNC_WIDTH         
     logic [$clog2(VSYNC_WIDTH)-1:0] tb_vsync_pulse_counter;  
     //changed the parameters so the signals can be observed better
-
+/*
     // Hsync pulse 8 bits and Vsync pulse 2 bits
     localparam HSYNC_WIDTH = 56;
     localparam VSYNC_WIDTH = 35;
@@ -44,8 +44,8 @@ module tb_food;
     localparam VSYNC_BACK = 2;
     localparam HSYNC_PULSE = 8;
     localparam VSYNC_PULSE = 2;
-
-    /*
+    */
+    
     // vga 640X480 @60 hz Timing spec
     localparam HSYNC_WIDTH = 800;
     localparam VSYNC_WIDTH = 525;
@@ -57,7 +57,7 @@ module tb_food;
     localparam VSYNC_BACK = 33;
     localparam HSYNC_PULSE = 96;
     localparam VSYNC_PULSE = 2;
-    */
+    
     
     // generate active signals and frame reset signal for game tick generation
     my_VGA_active_pulse_Gen #(
@@ -155,7 +155,7 @@ module tb_food;
 
 
         
-        #(HSYNC_WIDTH*VSYNC_WIDTH*100000000*40); // 100000000 frames worth of clock cycles
+        #(HSYNC_WIDTH*VSYNC_WIDTH*3000000000*40); // 100000000 frames worth of clock cycles
         $finish; // end simulation
     end
 
