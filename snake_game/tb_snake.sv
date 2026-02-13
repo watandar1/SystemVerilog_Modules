@@ -110,12 +110,11 @@ module tb_snake;
         .i_collision(tb_collision), // for now, we can tie collision signal to 0, we will test collision later
         .i_turn_left(tb_turn_left), // for now, we can tie turn signals to 0, we will test turning later
         .i_turn_right(tb_turn_right),
-        //.o_snake_body_x(tb_snake_body_x), // we can leave these unconnected for now, we will test the snake's movement later
-        //.o_snake_body_y(tb_snake_body_y),
+        .o_snake_body_x(tb_snake_body_x), // we can leave these unconnected for now, we will test the snake's movement later
+        .o_snake_body_y(tb_snake_body_y),
         .o_snake_head_x(tb_snake_head_x),
         .o_snake_head_y(tb_snake_head_y),
         .o_snake_length(tb_snake_length), // we can leave this unconnected for now, we will test the snake's length later
-        .o_body_grow(tb_body_grow), // we can leave this unconnected for now, we will
         .o_game_over(tb_game_over)
     );
 
@@ -132,6 +131,8 @@ module tb_snake;
         $display("[%0t ns] FSM state is: %s", $time, uut.state.name());
         $display("[%0t ns] snake direction is: %s", $time, uut.direction.name());
         $display("[%0t ns] snake length is: %d", $time, tb_snake_length);
+        $display("[%0t ns] snake body x position is: %b", $time, tb_snake_body_x[0]); // display the x coordinate of the first body segment as an example, we can display more segments if needed
+        $display("[%0t ns] snake body y position is: %b", $time, tb_snake_body_y[0]); // display the y coordinate of the first body segment as an example, we can display more segments if needed
 
     end
 
@@ -168,6 +169,16 @@ module tb_snake;
         end
     endtask
 
+    task food_eaten();
+        begin
+            @(posedge tb_game_tick); // wait for the next game tick to simulate food consumption, this ensures the food consumption is registered in the FSM at the right time
+            tb_food_consumed = 1; // simulate food consumption, this should trigger the snake to grow
+            @(posedge tb_game_tick); // wait for the next game tick to reset the food consumed signal, this ensures the food consumed signal is only high for one game tick
+            tb_food_consumed = 0;
+            $display("[%0t ns] Food Eaten", $time);
+        end
+    endtask
+
      // Test sequence
     initial begin
         // Initialize inputs
@@ -191,18 +202,9 @@ module tb_snake;
 
         wait(tb_game_tick_counter == 10); // wait for 10 game ticks (about 1 second) before simulating food consumption
         turn_left(); // turn left at the first opportunity
-        
-        wait(tb_game_tick_counter == 10); // wait for 10 game ticks (about 1 second) before simulating food consumption
-        turn_right(); // turn right to test multiple turns
 
-        wait(tb_game_tick_counter == 10); // wait for 10 game ticks (about 1 second) before simulating food consumption
-        turn_right(); // turn right to test right turn
-
-        @(posedge tb_game_tick); // wait for the next game tick to simulate food consumption, this ensures the food consumption is registered in the FSM at the right time
-        tb_food_consumed = 1; // simulate food consumption, this should trigger the snake
-        @(posedge tb_game_tick); // wait for the next game tick to reset the food consumed signal, this ensures the food consumed signal is only high for one game tick
-        tb_food_consumed = 0;
-
+        wait(tb_game_tick_counter == 20); // wait for 10 more game ticks (about 1 second) before simulating food consumption
+        food_eaten(); // simulate food consumption to test snake growth
 
         
         #(HSYNC_WIDTH*VSYNC_WIDTH*100*40); //  frames worth of clock cycles
