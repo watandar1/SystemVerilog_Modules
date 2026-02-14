@@ -23,32 +23,22 @@ module render_game #(
     // reset input,
     input logic i_rst_n,
 
-    // Game input signals
     //========================================================================================================
     input logic i_game_tick, // signal from game tick module
     input logic i_game_start, // signal to indicate game has started, rendering should start after
 
-    input logic [5:0] grid_width, // width of the game grid, can be used for rendering and collision detection
-    input logic [4:0] grid_height, // height of the game grid, can be used for rendering and collision detection
-    //========================================================================================================
-
-    // VGA input signals
-    //========================================================================================================
-    // do we really need to input VGA singal?, its should just be output we dont care about timing here?
-    input logic [3:0] i_vga_red, // red color signal from VGA active pulse generator
-    input logic [3:0] i_vga_green, // green color signal from VGA active pulse generator
-    input logic [3:0] i_vga_blue, // blue color signal from VGA active pulse generator
-    input logic i_vga_hsync, // horizontal sync signal from VGA active pulse generator
-    input logic i_vga_vsync, // vertical sync signal from VGA active pulse generator
-    input logic i_vga_frame_reset, // signal from VGA active pulse generator to indicate start
+    input logic [5:0] i_grid_col_x, // width of the game grid, can be used for rendering and collision detection
+    input logic [4:0] i_grid_row_y, // height of the game grid, can be used for rendering and collision detection
+   
+    input logic i_video_on,
     //========================================================================================================
 
 
     // Snake input signals
     //========================================================================================================
     // signal from snake module indicating snake head and body coordinates and snake length for rendering
-    input logic [5:0] i_snake_body_x [1199:0], // x position of the snake's body segments, can be observed in the testbench
-    input logic [4:0] i_snake_body_y [1199:0], // y position of the snake's body segments, can be observed in the testbench
+    input logic [5:0] i_snake_body_x [110:0], // x position of the snake's body segments, can be observed in the testbench
+    input logic [4:0] i_snake_body_y [110:0], // y position of the snake's body segments, can be observed in the testbench
     input logic [5:0] i_snake_head_x,          // x position of the snake's head
     input logic [4:0] i_snake_head_y,           // y position of the snake's head
     input logic [10:0] i_snake_length,          // length of the snake, can be observed in the testbench
@@ -64,12 +54,6 @@ module render_game #(
 
     //Outputs:
 
-    // Game output signals
-    //========================================================================================================
-
-    
-    //========================================================================================================
-
     // VGA output signals
     //========================================================================================================
     output logic [3:0] o_vga_red, // red color signal to VGA
@@ -81,30 +65,90 @@ module render_game #(
     // Snake output signals
     //========================================================================================================
     output logic o_snake_collision, // signal to indicate snake has collided with itself or wall
-    output logic o_food_eaten, // signal to indicate snake has eaten food
 
     //========================================================================================================
 
     // Food output signals
     //========================================================================================================
     output logic o_food_consumed,
-    output logic o_food_place_ok,
+    output logic o_food_place_ok
 
     //========================================================================================================
 
 );
 
-//local parameters:
+// --- Object Detection Signals ---
+logic is_apple;
+logic is_head;
+logic is_body;
 
-//internal signals:
 
+// 1. Check if current grid matches the Apple
+assign is_apple = (i_grid_col_x == i_food_x) && (i_grid_row_y == i_food_y);
+
+// 2. Check if current grid matches the Snake Head
+
+assign is_head  = (i_grid_col_x == i_snake_head_x) && (i_grid_row_y == i_snake_head_y);
+
+// 3. Check if current grid matches ANY part of the Snake Body
 always_comb begin
-    
+    is_body = 1'b0; // Default to 0
+    // Loop through the maximum possible body size
+    for (int i = 0; i < 120; i++) begin
+        // Only check segments that actually exist based on current length
+        if (i < i_snake_length) begin
+            if ((i_grid_col_x == i_snake_body_x[i]) && (i_grid_row_y == i_snake_body_y[i])) begin
+                is_body = 1'b1;
+            end
+        end
+    end
 end
 
-// Render logic:
-// use combinational logic to determine the color of each pixel based on the snake and food coordinates
-// use the VGA sync signals to determine when to output the color signals
+// --- VGA RGB Color Driver ---
+// We use if/else to create priority: Head > Body > Apple > Background
+always_comb begin
+    if (!i_video_on) begin
+        // ALWAYS output 0 during the blanking interval to prevent monitor issues
+        {o_vga_red, o_vga_green, o_vga_blue} = 12'h000; 
+    end else if (is_head) begin
+        {o_vga_red, o_vga_green, o_vga_blue} = 12'h0_F_0; // Head: Bright Green
+    end else if (is_body) begin
+        {o_vga_red, o_vga_green, o_vga_blue} = 12'h0_8_0; // Body: Dark Green
+    end else if (is_apple) begin
+        {o_vga_red, o_vga_green, o_vga_blue} = 12'hF_0_0; // Apple: Red
+    end else begin
+        {o_vga_red, o_vga_green, o_vga_blue} = 12'h1_1_1; // Background: Dark Gray
+    end
+end
 
+
+// food consume logic
+assign o_food_consumed = (i_snake_head_x == i_food_x) && (i_snake_head_y == i_food_y);
+// Collision Detection Logic
+    // We use "sticky" logic: Start at 0, if ANY match is found, stick to 1.
+    always_comb begin
+        o_snake_collision = 1'b0; // Default to no collision
+        o_food_place_ok   = 1'b1; // Default to OK to place food
+        
+        // Check collision with the head (Self-Collision)
+        for(int i = 0; i <= 110; i++) begin
+            if (i < i_snake_length) begin
+                // Check if Head hits Body
+                if ((i_snake_head_x == i_snake_body_x[i]) && (i_snake_head_y == i_snake_body_y[i])) begin
+                    o_snake_collision = 1'b1; 
+                end
+                
+                // Check if Food is inside Body (for spawning safety)
+                if ((i_food_x == i_snake_body_x[i]) && (i_food_y == i_snake_body_y[i])) begin
+                    o_food_place_ok = 1'b0;
+                end
+            end
+        end
+
+        // Also ensure food is not on the head
+        if ((i_food_x == i_snake_head_x) && (i_food_y == i_snake_head_y)) begin
+            o_food_place_ok = 1'b0;
+        end
+    end
 
 endmodule

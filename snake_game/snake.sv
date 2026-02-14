@@ -38,8 +38,8 @@ module snake #(
     // the "body" contains of all coordinates possible and it follows the head
     // the render module should only display the number of segments equal to the snake length, 
     // this way we can create the illusion of growth without actually having to add segments
-    output logic [5:0] o_snake_body_x [1199:0], // x position of the snake's body segments, can be observed in the testbench
-    output logic [4:0] o_snake_body_y [1199:0], // y position of the snake's body segments, can be observed in the testbench
+    output logic [5:0] o_snake_body_x [110:0], // x position of the snake's body segments, can be observed in the testbench
+    output logic [4:0] o_snake_body_y [110:0], // y position of the snake's body segments, can be observed in the testbench
     // the "player"
     output logic [5:0] o_snake_head_x,          // x position of the snake's head
     output logic [4:0] o_snake_head_y,           // y position of the snake's head
@@ -93,7 +93,7 @@ always_ff @(posedge i_clk) begin
         o_snake_length <= 11'd0; // initial length of the snake is 0
         //o_body_grow <= 0; // body should not grow at reset
         // initialize body segments to 0
-        for (int i = 0; i < 1200; i++) begin
+        for (int i = 0; i < 12; i++) begin
             o_snake_body_x[i] = 6'b000000; // initialize body segment x positions to 0
             o_snake_body_y[i] = 5'b00000; // initialize body segment y positions to 0
         end
@@ -133,28 +133,55 @@ always_ff @(posedge i_clk) begin
                             RIGHT: direction <= DOWN;   // turn right from RIGHT to DOWN
                         endcase
                     end
-                    // this section actually moves the head, it should also move the body
-                    unique case (direction)
-                        UP: o_snake_head_y <= o_snake_head_y + 5'b00001; // move up by increasing y coordinate
-                        DOWN: o_snake_head_y <= o_snake_head_y - 5'b00001; // move down by decreasing y coordinate     
-                        LEFT: o_snake_head_x <= o_snake_head_x - 6'b000001; // move left by decreasing x coordinate
-                        RIGHT: o_snake_head_x <= o_snake_head_x + 6'b000001; // move right by increasing x coordinate
-                    endcase
-
-                    o_snake_body_x[0] <= o_snake_head_x; // update first body segment X coordinate, so the tail follows
-                    o_snake_body_y[0] <= o_snake_head_y; // update first body segment Y coordinate, so the tail follows
-
+                    
                     // looping through 1200 segments is too much and power consuming
                     // the snake length is the limiter to moving the segments, this is order to "save power"
-                    for (int i = 1199; i >= 0; i--) begin
+                    for (int i = 110; i > 0; i--) begin
                         //if (i < o_snake_length) begin // only update body segments that are within the current length of the snake
                         o_snake_body_x[i] = o_snake_body_x[i-1]; // update body segment X coordinate to follow the previous segment
                         o_snake_body_y[i] = o_snake_body_y[i-1]; // update body segment Y coordinate to follow the previous segment
                         //end
                     end
+                    // this section actually moves the head, it should also move the body
+                    unique case (direction)
+                        UP:begin
+                            if (o_snake_head_y == 29) begin
+                                o_snake_head_y <= 0;
+                            end else begin
+                                o_snake_head_y <= o_snake_head_y - 5'b00001; // move up by increasing y coordinate
+                            end
+                        end 
+                        DOWN: begin
+                            if (o_snake_head_y == 29) begin
+                                o_snake_head_y <= 0;
+                            end else begin
+                                o_snake_head_y <= o_snake_head_y + 5'b00001; // move up by increasing y coordinate
+                            end
+                        end    
+                        LEFT: begin
+                            if (o_snake_head_x == 39) begin
+                                o_snake_head_x <= 0;
+                            end else begin
+                                o_snake_head_x <= o_snake_head_x - 6'b000001; // move left by decreasing x coordinate
+                            end
+                        end 
+                        RIGHT: begin
+                            if (o_snake_head_x == 39) begin
+                                o_snake_head_x <= 0;
+                            end else begin
+                                o_snake_head_x <= o_snake_head_x + 6'b000001; // move left by decreasing x coordinate
+                            end
+                        end 
+                    endcase
+
+                    o_snake_body_x[0] <= o_snake_head_x; // update first body segment X coordinate, so the tail follows
+                    o_snake_body_y[0] <= o_snake_head_y; // update first body segment Y coordinate, so the tail follows
+
 
                     if(i_food_eaten) begin
-                        o_snake_length <= o_snake_length + 1; // increase snake length by 1 when food is eaten
+                        if (o_snake_length < 110 ) begin
+                            o_snake_length <= o_snake_length + 1; // increase snake length by 1 when food is eaten
+                        end
                         // Add logic for if the snake has reached max length
                     end 
 
