@@ -1,0 +1,4 @@
+Simple Debounce button "filter" for any FPGA Dev board. 
+works fine and perfectly
+
+//MK
