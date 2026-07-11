@@ -1,0 +1,10 @@
+created 18KB FIFO for arty A7-100T, it is synthesized and correctly mapped to ram18 block in vivado
+
+this FIFO can work great as buffer to counter metastability for data with width 16 bits or something.
+Cant really work as memory storage. 
+
+Some ideas below for this folder
+TO DO:
+* Circular FIFO, with pointers so we can reach data slots several times.
+* dual port BRAM
+

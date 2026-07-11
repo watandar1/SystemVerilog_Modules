@@ -1,0 +1,5 @@
+So the purpose of this folder is to have generic modules, some might be unfinished or ongoing. 
+in short smaller modules are here, they are mostly used in bigger projects. 
+
+
+//MK

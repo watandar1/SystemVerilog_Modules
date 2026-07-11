@@ -1,0 +1,6 @@
+object folder should have modules that are objects. static objects
+so far only ball.sv is here ( dont really see other object modules being here...)
+
+the ball modules is just a black ball on the screen with VGA, (its "pixelly")
+
+//MK

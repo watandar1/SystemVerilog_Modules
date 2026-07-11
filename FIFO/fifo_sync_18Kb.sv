@@ -6,6 +6,10 @@
     The FIFO supports synchronous reset, write enable, and read enable signals. 
     The full and empty flags are generated based on the count of items in the FIFO.
 
+2026-07-01
+    was tested with testbench real quick, worked properly
+    also was synthesized with vivado on arty a7-100T -> was correctly assiged to ram block 18KB! :D
+
 */
 `timescale 1ns/1ps
 module fifo_sync_18Kb #(

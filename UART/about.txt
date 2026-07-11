@@ -1,0 +1,5 @@
+Paramiterized UART RX/ TX modules, tested and workes well with Nandland Go board and Arty A7-100T
+initial CLKs_PER_BIT is 868 (Clock frequency / baud rate)
+
+
+//MK

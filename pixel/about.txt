@@ -1,0 +1,8 @@
+pixel folder just contains pixel grid gen. it divides the screens pixels from VGA into bigger pixels so its easier to for other projects to draw objects/stuff on screen
+
+for example this moduel was used in snake game, to turn 640x480 into 40x30 grid
+
+works pretty alright, but when simulating (I dont remember now but there was an issue with the math and verilator) 
+the module works as inteded currently
+
+//MK

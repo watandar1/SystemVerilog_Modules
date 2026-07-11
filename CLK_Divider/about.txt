@@ -1,0 +1,4 @@
+wanted to create a clock divider, its really not necessary since Xilinx Vivado has clock wiz where I can instantiate any clock freuquency below 100MHz easily.
+Also I suspect this clock divider doesnt work correctly if it would run for a very long time. There might be some shift or something. 
+
+//MK
