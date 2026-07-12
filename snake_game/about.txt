@@ -1,0 +1,11 @@
+this folder contains modules for snake game. 
+work is in progress.
+
+currently snake game works with the length of 110 Pixel segments, doesnt work if I want to use all the 40x30=1200 pixel cell length for snake, since it uses too much resources from LUT
+should work towards memory so we can utilize arty a7-100T ram blocks,
+
+snake_game_top is top level module used in arty a7-100T.
+render_game is the actual snake game. 
+
+
+//MK
