@@ -1,6 +1,7 @@
 # SystemVerilog Modules
 
 Personal collection of SystemVerilog RTL modules, designed and tested on a Xilinx Arty A7-100T FPGA.
+Use verilator_automated.py for simulating and testing functionality
 
 This is an ongoing learning repo. Modules get added and revised as I explore different areas of digital design in my free time — some are complete and tested, others are still in progress. 
 Status is noted below and in each folder's `about.txt`.
@@ -17,9 +18,7 @@ Status is noted below and in each folder's `about.txt`.
 | Pixel Grid Gen | ⚠️ Working, minor caveat | Known simulation quirk in Verilator; works fine on hardware |
 | Generic Modules (LFSR, priority encoder, etc.) | ⚠️ Mostly tested | `collision_detection.sv` is an unimplemented stub |
 | Snake Game | 🚧 In progress | Playable core loop; body storage is LUT-heavy and needs a BRAM-based rewrite |
-| MX180TP scripts (Python) | 🧪 AI-assisted | Bench power supply control scripts, not SystemVerilog |
-
-## Background
+| MX180TP scripts (Python) | 🧪 AI-assisted | Bench power supply control scripts, not SystemVerilog. used to control PSU |
 
 
 //MK
