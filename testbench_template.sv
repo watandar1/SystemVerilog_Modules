@@ -13,11 +13,12 @@ module tb_NAME_OF_MODULE;
 // declare the parameter if needed
 localparam GENERIC_PARAMETER = 16;
 
+
+//=================================================================
+// declare wires and registers
 logic tb_clk;
 logic tb_rst_n;
 
-//=================================================================
-//declare other variables
 
 
 //=================================================================
@@ -41,6 +42,7 @@ end
 //=================================================================
 // Define tasks to be used in testbench
 
+// generic task 1
 task generic_input_task(
     //declare input
     input logic i_input
@@ -49,7 +51,7 @@ task generic_input_task(
 end
 endtask
 
-
+// generic task 2
 task generic_output_task(
     output logic o_output
 ); begin
@@ -57,6 +59,14 @@ task generic_output_task(
 end
     
 endtask
+
+// always block triggering on rising edge of arbitrary logic
+always @(posedge /*ENTER DESIRED POSEDGE TRIGGER*/) begin
+    $display("[%0t ns] X = %d, Y = %d", $time, /*variable X*/, /*variable Y*/);
+    // POSEDGE TRIGGER
+    // DO SOMETHING
+
+end
 
 
 //=================================================================
