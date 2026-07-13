@@ -10,6 +10,10 @@
     was tested with testbench real quick, worked properly
     also was synthesized with vivado on arty a7-100T -> was correctly assiged to ram block 18KB! :D
 
+2026-07-03
+    FIFO doesnt really work as memory since its desctructive, meaning that when you read from it, the data is lost.
+    can be used as a buffer especially for streaming data, also for clock domain crossing
+
 */
 `timescale 1ns/1ps
 module fifo_sync_18Kb #(
