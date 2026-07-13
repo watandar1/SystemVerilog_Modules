@@ -93,9 +93,9 @@ always_ff @(posedge i_clk) begin
         o_snake_length <= 11'd0; // initial length of the snake is 0
         //o_body_grow <= 0; // body should not grow at reset
         // initialize body segments to 0
-        for (int i = 0; i < 12; i++) begin
-            o_snake_body_x[i] = 6'b000000; // initialize body segment x positions to 0
-            o_snake_body_y[i] = 5'b00000; // initialize body segment y positions to 0
+        for (int i = 0; i < 110; i++) begin
+            o_snake_body_x[i] <= 6'b000000; // initialize body segment x positions to 0
+            o_snake_body_y[i] <= 5'b00000; // initialize body segment y positions to 0
         end
 
     end else begin
@@ -138,8 +138,8 @@ always_ff @(posedge i_clk) begin
                     // the snake length is the limiter to moving the segments, this is order to "save power"
                     for (int i = 110; i > 0; i--) begin
                         //if (i < o_snake_length) begin // only update body segments that are within the current length of the snake
-                        o_snake_body_x[i] = o_snake_body_x[i-1]; // update body segment X coordinate to follow the previous segment
-                        o_snake_body_y[i] = o_snake_body_y[i-1]; // update body segment Y coordinate to follow the previous segment
+                        o_snake_body_x[i] <= o_snake_body_x[i-1]; // update body segment X coordinate to follow the previous segment
+                        o_snake_body_y[i] <= o_snake_body_y[i-1]; // update body segment Y coordinate to follow the previous segment
                         //end
                     end
                     // this section actually moves the head, it should also move the body
