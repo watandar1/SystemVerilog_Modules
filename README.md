@@ -14,11 +14,12 @@ Status is noted below and in each folder's `about.txt`.
 | FIFO (18Kb sync) | ✅ Tested, working | Synthesized in Vivado, correctly mapped to an 18Kb BRAM block |
 | Debounce | ✅ Tested, working | Simple mechanical button debounce filter |
 | VGA | ✅ Tested, working | 640x480@60Hz timing driver plus modular sub-blocks |
-| Clock Divider | ⚠️ Working, minor caveat | Possible drift over very long run times, not yet investigated |
-| Pixel Grid Gen | ⚠️ Working, minor caveat | Known simulation quirk in Verilator; works fine on hardware |
-| Generic Modules (LFSR, priority encoder, etc.) | ⚠️ Mostly tested | `collision_detection.sv` is an unimplemented stub |
+| Clock Divider | ✅ Working, minor caveat | Possible drift over very long run times, not yet investigated |
+| Pixel Grid Gen | ✅ Working, minor caveat | Known simulation quirk in Verilator; works fine on hardware |
+| Generic Modules (LFSR, priority encoder, etc.) | ✅⚠️ Mostly tested | `collision_detection.sv` is an unimplemented stub |
 | Snake Game | 🚧 In progress | Playable core loop; body storage is LUT-heavy and needs a BRAM-based rewrite |
-| MX180TP scripts (Python) | 🧪 AI-assisted | Bench power supply control scripts, not SystemVerilog. used to control PSU |
+| MX180TP scripts (Python) | 🧪<img width="493" height="405" alt="image" src="https://github.com/user-attachments/assets/7d34040f-9769-4694-b058-da56223e6e67" />
+ AI-assisted | Bench power supply control scripts, not SystemVerilog. used to control PSU |
 
 
 //MK
