@@ -18,8 +18,7 @@ Status is noted below and in each folder's `about.txt`.
 | Pixel Grid Gen | ✅ Working, minor caveat | Known simulation quirk in Verilator; works fine on hardware |
 | Generic Modules (LFSR, priority encoder, etc.) | ✅⚠️ Mostly tested | `collision_detection.sv` is an unimplemented stub |
 | Snake Game | 🚧 In progress | Playable core loop; body storage is LUT-heavy and needs a BRAM-based rewrite |
-| MX180TP scripts (Python) | 🧪<img width="493" height="405" alt="image" src="https://github.com/user-attachments/assets/7d34040f-9769-4694-b058-da56223e6e67" />
- AI-assisted | Bench power supply control scripts, not SystemVerilog. used to control PSU |
+| MX180TP scripts (Python) | 🧪<img width="220" height="148" alt="image" src="https://github.com/user-attachments/assets/c73f0b76-4c56-4586-bfc5-a1acefc678e1" /> AI-assisted | Bench power supply control scripts, not SystemVerilog. used to control PSU |
 
 
 //MK
