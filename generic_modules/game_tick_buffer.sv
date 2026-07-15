@@ -1,13 +1,17 @@
-
+/*
+game tick buffer to be used in snake game
+we need to align the button press with the game tick logic 
+so the game can register/remember/understand that the button was pressed
+*/
 
 
 module game_tick_buffer (
     input logic i_clk,
     input logic i_rst_n,
-    input logic i_debounced_btn, // From your debounce_btn module
-    input logic i_game_tick,     // From your game_tick module
+    input logic i_debounced_btn, 
+    input logic i_game_tick,     
     
-    output logic o_action_req    // Goes to your snake FSM (e.g., i_turn_left)
+    output logic o_action_req  
 );
 
     // 1. Edge Detection Logic
@@ -18,11 +22,10 @@ module game_tick_buffer (
         if (!i_rst_n) begin
             btn_prev <= 1'b0;
         end else begin
-            btn_prev <= i_debounced_btn; // Remember the state from the last clock cycle
+            btn_prev <= i_debounced_btn; 
         end
     end
 
-    // Pulse is high ONLY for 1 clock cycle when the button goes from 0 to 1
     assign btn_pulse = i_debounced_btn & ~btn_prev;
 
 
@@ -31,7 +34,7 @@ module game_tick_buffer (
         if (!i_rst_n) begin
             o_action_req <= 1'b0;
         end else if (btn_pulse) begin
-            o_action_req <= 1'b1; // Button pressed! Remember it.
+            o_action_req <= 1'b1; // Button pressed! Remember it. For the game tick
         end else if (i_game_tick) begin
             o_action_req <= 1'b0; // Game tick happened! Clear the memory.
         end
