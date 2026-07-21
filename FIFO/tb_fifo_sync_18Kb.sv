@@ -9,7 +9,7 @@ module tb_fifo_sync_18Kb;
 
 
     localparam DATA_WIDTH = 18;
-    localparam FIFO_DEPTH = 1024;
+    localparam FIFO_DEPTH = 4;
 
 
     logic tb_clk;
@@ -24,7 +24,11 @@ module tb_fifo_sync_18Kb;
 
 
     // Instantiate the FIFO DUT
-    fifo_sync_18Kb DUT (
+    fifo_sync_18Kb #(
+        .DATA_WIDTH(DATA_WIDTH),
+        .FIFO_DEPTH(FIFO_DEPTH)
+
+    )   DUT (
         .clk(tb_clk),
         .rst_n(tb_rst_n),
         .wr_en(tb_wr_en),
@@ -91,29 +95,41 @@ module tb_fifo_sync_18Kb;
 
         #100; // Wait for some time after reset
 
-        // write task
+        // write task, 4 address slot write 4 times to make the FIFO full
         write_to_fifo(tb_random_number); // write random data to FIFO
         #20; // wait for some time
         write_to_fifo(tb_random_number); // write random data to FIFO
         #20; // wait for some time
+        
+        write_to_fifo(tb_random_number); // write random data to FIFO
+        #20; // wait for some time
+        
+        write_to_fifo(tb_random_number); // write random data to FIFO
+        #20; // wait for some time
+        
 
         // read task
         read_from_fifo(tb_data_out); // read data from FIFO
         #20; // wait for some time
+
         read_from_fifo(tb_data_out); // read data from FIFO
         #20; // wait for some time
 
-        // try to read from empty FIFO
-        read_from_fifo(tb_data_out); // read data from FIFO, should be empty
+        read_from_fifo(tb_data_out); // read data from FIFO
         #20; // wait for some time
         
-        read_from_fifo(tb_data_out); // read data from FIFO, should be empty
+        read_from_fifo(tb_data_out); // read data from FIFO
         #20; // wait for some time
         
-        read_from_fifo(tb_data_out); // read data from FIFO, should be empty
+        // try to read more than available slots
+        read_from_fifo(tb_data_out); // read data from FIFO
         #20; // wait for some time
         
-        read_from_fifo(tb_data_out); // read data from FIFO, should be empty
+        read_from_fifo(tb_data_out); // read data from FIFO
+        #20; // wait for some time
+
+        // write again, so see its really circular, 
+        write_to_fifo(tb_random_number); // write random data to FIFO
         #20; // wait for some time
 
 

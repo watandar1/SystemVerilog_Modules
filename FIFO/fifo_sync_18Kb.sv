@@ -14,6 +14,13 @@
     FIFO doesnt really work as memory since its desctructive, meaning that when you read from it, the data is lost.
     can be used as a buffer especially for streaming data, also for clock domain crossing
 
+2026-07-21
+    did some more testing with the FIFO, this is actually a Circular FIFO, sure once read that value 
+    is destoryed, but once its destroyed, another slot is free. which means we can write to it again.
+    testing this with 4 bit depth shows this very good. 
+    All of this is possible thanks to the MSB, addind one more bit for the pointers allows for this
+    
+
 */
 `timescale 1ns/1ps
 module fifo_sync_18Kb #(
@@ -62,6 +69,7 @@ end
 // Full and empty flag generation
 
 // FIFO is full when write pointer equals read pointer but MSB of write pointer is different
+// 1. compare the adress, should be same
 assign full = ((wr_ptr[$clog2(FIFO_DEPTH)-1:0] == rd_ptr[$clog2(FIFO_DEPTH)-1:0]) && 
                 (wr_ptr[$clog2(FIFO_DEPTH)] != rd_ptr[$clog2(FIFO_DEPTH)])); 
 
