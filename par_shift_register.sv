@@ -1,5 +1,5 @@
 /*
-writing par_shift_register.sv for mock interview
+
 */
 
 module par_shift_register #(
