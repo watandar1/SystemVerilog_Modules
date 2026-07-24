@@ -1,5 +1,5 @@
 /*
-writing systemverilog codes for mock interview
+
 */
 
 module traffif_light #(
