@@ -1,6 +1,6 @@
 /*
 parameterized and reuseable RTL code for multiplexer, NUM_INPUTS and DATA_width
-writing for mock interview 
+
 */
 // below was my attempt
 module par_mux #(
